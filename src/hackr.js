@@ -24,7 +24,7 @@
         buffer,
         options = {},
         intervals = {},
-        elementsDisplayTreeMap = {},
+        elementDisplayTreeMap = {},
         colors = {
             RED: 'red',
             GREEN: 'green',
@@ -215,30 +215,6 @@
         return true;
     };
 
-    var hideHost = function() {
-        var $el, display;
-        $('body > *').not('script,noscript').each(function(index, el) {
-            $el = $(el);
-            display = $el.css('display');
-            if (!(display in elementsDisplayTreeMap)) {
-                elementsDisplayTreeMap[display] = {};
-            }
-            elementsDisplayTreeMap[display][index] = $el;
-            $el.css('display', 'none');
-        });
-    };
-
-    var showHost = function() {
-        var display, displayImplMap, index, el;
-        for (display in elementsDisplayTreeMap) {
-            displayImplMap = elementsDisplayTreeMap[display];
-            for (index in displayImplMap) {
-                el = displayImplMap[index];
-                $(el).css('display', display);
-            }
-        }
-    };
-
     var validateOptions = function(options) {
         // fill in default options
         merge(options, defaultOptions);
@@ -365,6 +341,30 @@
                 $el.css('visibility', 'visible');
             });
         }, rate);
+    };
+
+    var hideHost = function() {
+        var $el, display;
+        $('body > *').not('script,noscript').each(function(index, el) {
+            $el = $(el);
+            display = $el.css('display');
+            if (!(display in elementDisplayTreeMap)) {
+                elementDisplayTreeMap[display] = {};
+            }
+            elementDisplayTreeMap[display][index] = $el;
+            $el.css('display', 'none');
+        });
+    };
+
+    var showHost = function() {
+        var display, displayImplMap, index, el;
+        for (display in elementDisplayTreeMap) {
+            displayImplMap = elementDisplayTreeMap[display];
+            for (index in displayImplMap) {
+                el = displayImplMap[index];
+                $(el).css('display', display);
+            }
+        }
     };
 
     var disableAnimation = function() {
