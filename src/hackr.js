@@ -38,7 +38,7 @@
             DANGER: colors.RED
         },
         mandatoryOptionKeys = [
-            'fauxCode'
+            // 'fauxCode'
         ],
         defaultOptions = {
             cursorBlinkRate: 400,
@@ -50,7 +50,8 @@
                 type: alertTypes.SUCCESS,
                 message: 'access granted',
                 blink: true
-            }]
+            }],
+            resourceUrl: 'https://rawgit.com/jrburke/r.js/master/dist/r.js'
         },
         regex = {
             comments: /(?:\/\*(?:[\s\S]*?)\*\/)|(?:([\s;])+\/\/(?:.*)$)/gm,
@@ -180,13 +181,24 @@
     // PRIVATE FUNCTIONS
 
     var bootstrap = function(opts) {
+        console.debug('> bootstrap');
         opts = opts || {};
         validateOptions(opts);
         options = opts;
+        init();
+        $.get(options.resourceUrl, onResourceLoad);
+        return true;
+    };
 
-        buffer = initBuffer(opts.fauxCode);
+    var onResourceLoad = function(file) {
+        console.debug('> onResourceLoad');
+        // buffer = initBuffer(options.fauxCode);
+        buffer = initBuffer(file);
+        greet('buffer initialized');
+    };
 
-        hideHost();
+    var init = function() {
+        console.debug('> init');
 
         $wrapper = initWrapperEl();
         $code = initCodeEl();
@@ -194,20 +206,23 @@
         $input = initInputEl();
 
         disableAnimation(); // we don't want the blink to be animated
-        initCursorBlink(opts.cursorBlinkRate);
+        initCursorBlink(options.cursorBlinkRate);
+
+        hideHost();
 
         $wrapper.append($code);
         $wrapper.append($cursor);
         $wrapper.append($input);
-        $(opts.targetEl || 'body').append($wrapper);
+        $(options.targetEl || 'body').append($wrapper);
         $input.focus();
 
-        greet(opts.greeting);
-
-        return true;
+        greet(options.greeting);
     };
 
     var teardown = function() {
+        console.debug('> teardown');
+
+        buffer = '';
         clearAllIntervals();
         $wrapper.remove();
         restoreAnimation();
@@ -314,7 +329,6 @@
         ((keyCode = e.which) in numericKeyCodes) ? numericKeyCodes.hasOwnProperty(
             keyCode) && onNumericKeyPress(keyCode): (nextToken =
             buffer.shift()) && onCharKeyPress(nextToken);
-
     };
 
     var onCharKeyPress = function(token) {
