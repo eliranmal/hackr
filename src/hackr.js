@@ -13,7 +13,8 @@
 
     // SETTINGS, SHARED MEMBERS
 
-    var isRunning,
+    var version = '0.1.1',
+        isRunning,
         isProgress,
         jQueryFxOffState,
         $wrapper,
@@ -92,8 +93,9 @@
             code: {
                 display: 'inline',
                 whiteSpace: 'pre-wrap',
+                marginRight: '.2em',
                 color: 'green',
-                marginRight: '.2em'
+                backgroundColor: '#000'
             },
             cursor: {
                 display: 'inline-block',
@@ -103,9 +105,17 @@
                 marginBottom: '-.25em'
             },
             input: {
-                position: 'absolute',
-                left: '-999999px',
-                bottom: '-999999px' // don't use TOP to hide it - it breaks the container's scroll-top update
+                display: 'inline-block',
+                width: '0',
+                height: '0',
+                margin: '0',
+                padding: '0',
+                border: '0 none',
+                outline: 'none',
+                minHeight: '0',
+                minWidth: '0',
+                lineHeight: '0',
+                boxShadow: 'transparent 0 0 0'
             },
             alert: {
                 position: 'fixed',
@@ -130,7 +140,7 @@
 
     // PUBLIC API
 
-    Hackr.VERSION = '0.1.0';
+    Hackr.VERSION = version;
 
     Hackr.ALERT_TYPE = alertTypes;
 
@@ -310,6 +320,7 @@
     var initInputEl = function() {
         return $('<input>')
             .attr('type', 'text')
+            .css(css.input)
             .keydown(function(e) {
                 (e.which === 13) && isRunning && e.preventDefault(); // ENTER breaks the auto-scroll. fuck it, we don't need it
             })
@@ -321,8 +332,7 @@
             })
             .blur(function(e) {
                 this.focus(); // keep focus at all costs!
-            })
-            .css(css.input);
+            });
     };
 
     var onKeyPress = function(e) {
@@ -335,7 +345,6 @@
 
     var onCharKeyPress = function(token) {
         $code.append(token);
-        // input element must be hidden by negative bottom offset (and not top!) in order for the auto-scroll to work
         $wrapper.prop('scrollTop', $wrapper.height());
     };
 
