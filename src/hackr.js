@@ -85,6 +85,7 @@
                 lineHeight: '1.5',
                 fontSize: '18px',
                 fontFamily: 'monospace',
+                textAlign: 'left',
                 backgroundColor: '#000',
                 opacity: '0.9'
             },
@@ -138,6 +139,7 @@
      * @param options options for the simulator.
      */
     Hackr.start = function(options) {
+        console.log('> start');
         isRunning || bootstrap(options) && (isRunning = true);
     };
 
